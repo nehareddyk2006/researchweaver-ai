@@ -17,7 +17,7 @@ export default function PaperCard({ paper }: PaperCardProps) {
 
           <div className="flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
             <Sparkles className="h-3.5 w-3.5" />
-            AI Ready
+            AI Analyzed
           </div>
         </div>
 
@@ -38,12 +38,22 @@ export default function PaperCard({ paper }: PaperCardProps) {
         </div>
 
         <p className="mt-5 line-clamp-4 text-sm leading-6 text-zinc-600">
-          {paper.preview}
+          {paper.analysis.summary || paper.preview}
         </p>
 
         <div className="mt-6 border-t pt-4 text-xs text-zinc-400">
           {paper.word_count.toLocaleString()} words
         </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+  {paper.analysis.keywords.slice(0,3).map(keyword=>(
+    <span
+      key={keyword}
+      className="rounded-full bg-zinc-100 px-2 py-1 text-xs"
+    >
+      {keyword}
+    </span>
+  ))}
+</div>
       </CardContent>
     </Card>
   );

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { usePaperUpload } from "@/hooks/use-paper-upload";
-
+import LoadingOverlay from "@/components/ui/loading-overlay";
 import UploadZone from "../upload/upload-zone";
 import PaperGrid from "../papers/paper-grid";
 import PaperDetails from "../papers/paper-details";
@@ -11,7 +11,7 @@ import PaperDetails from "../papers/paper-details";
 import { Paper } from "@/types/paper";
 
 export default function Workspace() {
-  const { papers, upload } = usePaperUpload();
+  const { papers, loading, upload } = usePaperUpload();
 
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
 
@@ -40,7 +40,7 @@ export default function Workspace() {
         </div>
 
       </div>
-
+      {loading && <LoadingOverlay />}
     </div>
   );
 }

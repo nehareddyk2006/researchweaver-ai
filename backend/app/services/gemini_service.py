@@ -1,5 +1,7 @@
 import os
 import json
+import time
+
 from dotenv import load_dotenv
 from google import genai
 
@@ -42,16 +44,45 @@ Paper:
 {text[:25000]}
 """
 
-    response = client.models.generate_content(
-        model="gemini-3.5-flash",
-        contents=prompt,
-    )
+    response = None
 
-    cleaned = (
-        response.text
-        .replace("```json", "")
-        .replace("```", "")
-        .strip()
-    )
+    for _ in range(3):
+        try:
+            response = client.models.generate_content(
+                model="gemini-flash-latest",
+                contents=prompt,
+            )
+            break
 
-    return json.loads(cleaned)
+        except Exception:
+            time.sleep(2)
+
+    if response is None:
+        raise Exception("Gemini unavailable")
+
+    try:
+        cleaned = (
+            response.text
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+        return json.loads(cleaned)
+
+    except Exception:
+        print("Gemini Raw Response:")
+        print(response.text)
+
+        return {
+            "title": "",
+            "summary": response.text,
+            "research_problem": "",
+            "methodology": "",
+            "datasets": [],
+            "models": [],
+            "metrics": [],
+            "limitations": [],
+            "future_work": [],
+            "keywords": [],
+        }
